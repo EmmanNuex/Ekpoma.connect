@@ -1,0 +1,46 @@
+body { 
+    background-color: #f4f7f6; 
+    font-family: Arial, sans-serif; 
+    color: #333; 
+}
+
+/* Branding colors for Ekpoma */
+.text-success { color: #1a5c37 !important; }
+.bg-success { background-color: #1a5c37 !important; }
+
+.header-section {
+    background-color: #1a5c37;
+    color: white;
+    padding: 30px 20px;
+    border-radius: 0 0 25px 25px;
+    margin-bottom: 20px;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.wallet-card {
+    background: #212529;
+    color: white;
+    border-radius: 15px;
+}
+
+.comment-box {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 0 0 15px 15px;
+}
+
+.comment-item {
+    font-size: 0.85rem;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.btn-success {
+    background-color: #1a5c37;
+    border: none;
