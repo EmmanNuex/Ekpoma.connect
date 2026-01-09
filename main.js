@@ -1,31 +1,27 @@
 let currentUserRole = "";
-let communityWallet = 1550000;
+let communityWallet = 1850000;
 
 let projects = [
     { name: "Market Well Project", raised: 1250000, goal: 2500000 },
-    { name: "Ivue Road Repair", raised: 300000, goal: 1000000 }
+    { name: "Ivue Road Patching", raised: 600000, goal: 1500000 }
 ];
 
 let posts = [
-    { title: "Town Hall Meeting", content: "Updates on the new health post location.", time: "1 day ago", comments: ["(Local) Ready to help!", "(Diaspora) Supporting from UK"] }
+    { title: "Village Meeting", content: "Monthly security briefing at the town hall.", time: "2 hours ago", comments: ["(Local Resident) I'll be there"] }
 ];
 
 function handleLogin() {
-    const email = document.getElementById('loginEmail').value;
-    const pass = document.getElementById('loginPass').value;
     currentUserRole = document.getElementById('userRole').value;
+    document.getElementById('authPage').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
     
-    if (email != "" && pass != "") {
-        document.getElementById('authPage').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        
-        // RBAC: Show admin tools ONLY to Village Head
-        document.getElementById('postInputArea').style.display = (currentUserRole === "Village Head") ? "block" : "none";
-        
-        refreshUI();
+    if (currentUserRole === "Village Head (Onojie Rep)") {
+        document.getElementById('postInputArea').style.display = 'block';
     } else {
-        alert("Please fill in login details");
+        document.getElementById('postInputArea').style.display = 'none';
     }
+    
+    refreshUI();
 }
 
 function refreshUI() {
@@ -40,14 +36,12 @@ function showProjects() {
     projects.forEach((p, i) => {
         let perc = Math.min((p.raised / p.goal) * 100, 100);
         list.innerHTML += `
-            <div class="card p-3 shadow-sm mb-3">
-                <h5 class="text-success mb-1">${p.name}</h5>
+            <div class="card p-3 mb-3">
+                <h6 class="text-success mb-1">${p.name}</h6>
                 <h4 class="mb-2">₦ ${p.raised.toLocaleString()}</h4>
-                <div class="progress mb-2" style="height: 8px;">
-                    <div class="progress-bar bg-success" style="width: ${perc}%"></div>
-                </div>
-                <div class="d-flex justify-content-between small text-muted mb-3">
-                    <span>Target: ₦ ${p.goal.toLocaleString()}</span>
+                <div class="progress mb-2" style="height: 8px;"><div class="progress-bar bg-success" style="width: ${perc}%"></div></div>
+                <div class="d-flex justify-content-between small text-muted mb-2">
+                    <span>Goal: ₦ ${p.goal.toLocaleString()}</span>
                     <span>${Math.round(perc)}%</span>
                 </div>
                 <button onclick="donate(${i})" class="btn btn-sm btn-success w-100">Contribute Funds</button>
@@ -56,13 +50,13 @@ function showProjects() {
 }
 
 function donate(index) {
-    let amt = prompt("How much would you like to contribute to " + projects[index].name + "?");
+    let amt = prompt("Enter amount to donate to " + projects[index].name + ":");
     if (amt && !isNaN(amt)) {
-        let val = parseInt(amt);
-        projects[index].raised += val;
-        communityWallet += val;
+        let v = parseInt(amt);
+        projects[index].raised += v;
+        communityWallet += v;
         refreshUI();
-        alert("Success! ₦" + val.toLocaleString() + " added to wallet.");
+        alert("Thank you! Contribution successful.");
     }
 }
 
@@ -81,17 +75,13 @@ function showFeed() {
     const feed = document.getElementById('feed');
     feed.innerHTML = '';
     posts.forEach((p, i) => {
-        let coms = p.comments.map(c => `<div class="p-1 border-bottom small">${c}</div>`).join('');
+        let coms = p.comments.map(c => `<div class="comment-item">${c}</div>`).join('');
         feed.innerHTML += `
-            <div class="card mb-3">
-                <div class="p-3">
-                    <h6 class="text-success mb-1">${p.title}</h6>
-                    <p class="small mb-1">${p.content}</p>
-                    <small class="text-muted">${p.time}</small>
-                </div>
-                <div class="comment-box">
-                    <div class="text-muted small mb-2">Comments:</div>
-                    ${coms}
+            <div class="card mb-3 p-3">
+                <h6 class="text-success mb-0">${p.title}</h6>
+                <p class="small text-muted mb-2">${p.time}</p>
+                <p class="small">${p.content}</p>
+                <div class="comment-box mt-2">${coms}
                     <div class="input-group mt-2">
                         <input type="text" id="com-${i}" class="form-control form-control-sm" placeholder="Reply...">
                         <button onclick="addComment(${i})" class="btn btn-sm btn-outline-success">Send</button>
@@ -115,8 +105,7 @@ function addPost() {
 function addComment(index) {
     const val = document.getElementById('com-' + index).value;
     if (val) {
-        // We tag the comment with the user's role
         posts[index].comments.push(`(${currentUserRole}) ${val}`);
         showFeed();
     }
-  }
+     }
